@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "샘플 캐시")
+@Tag(name = "EhCache")
 @RequiredArgsConstructor
 @RequestMapping("/api/sample/cache")
 @RestController
