@@ -50,6 +50,10 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.4.0")
     implementation("com.opencsv:opencsv:5.10")
 
+    // Cache
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.ehcache:ehcache:3.10.8:jakarta")  // Jakarta EE 버전
+
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
