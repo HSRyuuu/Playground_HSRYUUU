@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.util.Optional;
 
-@RestControllerAdvice
+//@RestControllerAdvice
 public class StandardResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
