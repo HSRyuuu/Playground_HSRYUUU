@@ -5,7 +5,7 @@ spring:
     init:
       mode: never
   datasource:
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://localhost:5432/cb
     username: root
     password: test
     driver-class-name: org.postgresql.Driver
@@ -38,3 +38,7 @@ logging:
     org.springframework.security.web.access: DEBUG
     org.springframework.security.web.access.intercept: DEBUG
     org.springframework.transaction: DEBUG
+
+kakao:
+  api_key: c9d632cf272516130994271caf59f118 # kakao api key
+  redirect_uri: http://localhost:8080/kakao/redirect-uri
