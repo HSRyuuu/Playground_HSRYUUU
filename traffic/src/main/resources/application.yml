@@ -1,24 +1,37 @@
 spring:
   application:
     name: traffic
-  datasource:
-    url: jdbc:postgresql://localhost:5432/test
-    username: root
-    password: test
-    driver-class-name: org.postgresql.Driver
+  profiles:
+    active: v2
+
+  # JPA
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        jdbc:
-          batch_size: 1000
+    open-in-view: false
+
+  # PostgreSQL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/traffic
+    username: traffic
+    password: traffic
+    driver-class-name: org.postgresql.Driver
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # Kafka
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
-      group-id: event-consumer-group
+      group-id: traffic-consumer-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -26,10 +39,18 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
-
+# Swagger
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     enabled: true
-    display-request-duration: true
+    show-extensions: true
+    show-common-extensions: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
