@@ -14,13 +14,27 @@
 ```
 traffic/
 ├── src/main/java/com/hsryuuu/traffic/
-│   ├── common/                  # HealthCheck 등 공통
-│   └── fcfs/                    # 선착순 예매 (Redis Lua + JPA)
+│   ├── common/            # HealthCheck 등 공통
+│   ├── fcfs/              # 선착순 예매
+│   ├── queue/             # 대기열
+│   ├── coupon/            # 쿠폰 발급
+│   ├── counting/          # 좋아요 / 투표
+│   ├── leaderboard/       # 실시간 랭킹
+│   ├── cache/             # 캐시 전략
+│   └── streaming/         # 이벤트 스트리밍
 ├── infra/
-│   └── docker-compose.yml       # PostgreSQL, Redis, Kafka, Kafka UI, Redis Insight
-└── k6/
-    ├── test.js                  # Health Check 부하테스트
-    └── fcfs-test.js             # 선착순 예매 부하테스트
+│   └── docker-compose.yml # PostgreSQL, Redis, Kafka, Kafka UI, Redis Insight
+└── k6/                    # k6 부하테스트 스크립트
+```
+
+각 패키지 구조:
+```
+{scenario}/
+├── README.md              # 상황 설명, 사용 기술
+├── Requirements.md        # 요구사항 정의
+├── {Scenario}Controller.java  # API 엔드포인트 (TODO)
+├── entity/                # JPA 엔티티
+└── repository/            # Spring Data Repository
 ```
 
 ## 실행 방법
@@ -40,11 +54,8 @@ open http://localhost:8080/swagger-ui.html
 ## 부하테스트
 
 ```bash
-# Health Check
-k6 run k6/test.js
-
-# 선착순 예매
-k6 run k6/fcfs-test.js
+k6 run k6/test.js        # Health Check
+k6 run k6/fcfs-test.js   # 선착순 예매
 ```
 
 ## 인프라 포트
@@ -62,4 +73,10 @@ k6 run k6/fcfs-test.js
 
 | 패키지 | 설명 | 핵심 기술 |
 |--------|------|-----------|
-| `fcfs` | 선착순 예매 | Redis Lua Script, JPA |
+| `fcfs` | 선착순 예매 | Redis Lua Script, DB Pessimistic Lock |
+| `queue` | 대기열 | Redis Sorted Set, SSE |
+| `coupon` | 쿠폰 발급 | Redis Set, Kafka Consumer |
+| `counting` | 좋아요 / 투표 | Redis INCR, Write-back Batch |
+| `leaderboard` | 실시간 랭킹 | Redis Sorted Set |
+| `cache` | 캐시 전략 | Cache Aside, Stampede 방지 |
+| `streaming` | 이벤트 스트리밍 | Kafka, Transactional Outbox |

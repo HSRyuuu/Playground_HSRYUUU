@@ -1,4 +1,4 @@
-package com.hsryuuu.traffic.fcfs.event;
+package com.hsryuuu.traffic.fcfs.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -33,8 +33,6 @@ public class FcfsEvent {
     @Column(nullable = false)
     private LocalDateTime closeAt;
 
-    private LocalDateTime createdAt;
-
     @Builder
     public FcfsEvent(String title, int totalStock, LocalDateTime openAt, LocalDateTime closeAt) {
         this.title = title;
@@ -42,18 +40,16 @@ public class FcfsEvent {
         this.remainingStock = totalStock;
         this.openAt = openAt;
         this.closeAt = closeAt;
-        this.createdAt = LocalDateTime.now();
+    }
+
+    public boolean isSoldOut() {
+        return remainingStock <= 0;
     }
 
     public void decreaseStock() {
-        if (this.remainingStock <= 0) {
+        if (isSoldOut()) {
             throw new IllegalStateException("재고가 소진되었습니다.");
         }
         this.remainingStock--;
-    }
-
-    public boolean isOpen() {
-        LocalDateTime now = LocalDateTime.now();
-        return !now.isBefore(openAt) && !now.isAfter(closeAt);
     }
 }
