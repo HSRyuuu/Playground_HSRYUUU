@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: traffic
@@ -14,7 +17,7 @@ spring:
 
   # PostgreSQL
   datasource:
-    url: jdbc:postgresql://localhost:5432/traffic
+    url: jdbc:postgresql://localhost:6543/traffic
     username: traffic
     password: traffic
     driver-class-name: org.postgresql.Driver
