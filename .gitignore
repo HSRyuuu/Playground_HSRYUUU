@@ -38,6 +38,14 @@ Thumbs.db
 *.class
 *.jar
 *.war
+*.hprof
+hs_err_pid*
+
+# OMC working dir
+.omc/
+
+# Claude local config (uncomment if you want to ignore)
+# .claude/
 
 # Node/npm stuff (if present)
 node_modules/
