@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("local", "test")
+@Profile("local")
 class TestUserLoader(
     private val jdbcTemplate: JdbcTemplate,
 ) : ApplicationRunner {

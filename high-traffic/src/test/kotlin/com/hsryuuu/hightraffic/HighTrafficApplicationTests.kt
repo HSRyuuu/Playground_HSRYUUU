@@ -1,12 +1,9 @@
 package com.hsryuuu.hightraffic
 
+import com.hsryuuu.hightraffic.support.IntegrationTest
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 
-@SpringBootTest
-@ActiveProfiles("test")
-class HighTrafficApplicationTests {
+class HighTrafficApplicationTests : IntegrationTest() {
 
     @Test
     fun contextLoads() {
