@@ -58,3 +58,12 @@ cd infra && docker-compose up -d
 - JPA Entity는 Kotlin `final` 회피를 위해 `allOpen` 플러그인 적용 (`@Entity`, `@MappedSuperclass`, `@Embeddable`).
 - QueryDSL Q클래스는 kapt가 `build/generated/source/kapt/main`에 생성하며 sourceSets에 포함되어 있다.
 - `-Xjsr305=strict`로 nullability 엄격 모드.
+
+## Swagger / OpenAPI 컨벤션
+
+모든 `@RestController`는 springdoc-openapi 어노테이션으로 API 문서를 자작성한다. Swagger UI(`/swagger-ui.html`)가 곧 API 명세이므로 누락하지 않는다.
+
+- **클래스 단위**: `@Tag(name = "<도메인 한글명>", description = "<도메인 설명>")`을 반드시 부여한다. 같은 도메인의 컨트롤러는 동일한 `name`을 공유한다 (예: `CouponController`/`AdminCouponController` → `"쿠폰"`).
+- **메서드 단위**: 모든 핸들러에 `@Operation(summary = "<한 줄 요약>", description = "<상세 설명>")`을 부여한다. `summary`는 동사로 시작하는 한 문장(예: "쿠폰을 발급한다"). `summary`/`description` 외 다른 속성은 사용하지 않는다.
+- `@ApiResponse`/`@ApiResponses`는 사용하지 않는다 (응답 코드 문서화는 생략).
+- import는 `io.swagger.v3.oas.annotations.tags.Tag`, `io.swagger.v3.oas.annotations.Operation`만 사용한다.
