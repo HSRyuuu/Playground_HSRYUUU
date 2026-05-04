@@ -8,5 +8,5 @@ interface CouponIssueService {
 
     fun getCouponStatus(couponId: Long): CouponStatusResponse
 
-    fun countIssues(couponId: Long): Long
+    fun countIssues(couponId: Long): Int
 }
