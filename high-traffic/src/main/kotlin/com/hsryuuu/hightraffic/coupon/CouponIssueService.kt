@@ -1,4 +1,4 @@
-package com.hsryuuu.hightraffic.coupon.service
+package com.hsryuuu.hightraffic.coupon
 
 interface CouponIssueService {
 

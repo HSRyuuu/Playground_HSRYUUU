@@ -3,7 +3,7 @@ package com.hsryuuu.hightraffic.coupon.service
 import com.hsryuuu.hightraffic.coupon.entity.Coupon
 import com.hsryuuu.hightraffic.coupon.repository.CouponIssueRepository
 import com.hsryuuu.hightraffic.coupon.repository.CouponRepository
-import com.hsryuuu.hightraffic.coupon.v1.CouponIssueServiceV1
+import com.hsryuuu.hightraffic.coupon.v2.CouponIssueServiceV2
 import com.hsryuuu.hightraffic.support.IntegrationTest
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * V1 (동시성 제어 없는 baseline) 동작 관찰용 단순 출력 테스트.
- * 어서션 없이 시나리오를 실행하고 race condition 결함이 어떻게 드러나는지 출력한다.
+ * V2 (synchronized 락) 동작 관찰용 단순 출력 테스트.
+ * 어서션 없이 시나리오를 실행하고 결과 + 짧은 해석 한 줄을 출력한다.
  */
-@DisplayName("CouponIssueServiceV1 동시성 동작 관찰")
-class CouponIssueServiceV1ConcurrencyTest @Autowired constructor(
-    private val service: CouponIssueServiceV1,
+@DisplayName("CouponIssueServiceV2 동시성 동작 관찰")
+class CouponIssueServiceV2ConcurrencyTest @Autowired constructor(
+    private val service: CouponIssueServiceV2,
     private val couponRepository: CouponRepository,
     private val couponIssueRepository: CouponIssueRepository,
 ) : IntegrationTest() {
@@ -60,12 +60,11 @@ class CouponIssueServiceV1ConcurrencyTest @Autowired constructor(
         log.info("성공: {}, 실패: {}", result.success, result.failure)
         log.info("coupon.issuedQuantity = {}", coupon.issuedQuantity)
         log.info("coupon_issue row 수   = {}", rowCount)
-        log.info("초과 발급량            = {}", rowCount - TOTAL_QUANTITY)
 
-        if (rowCount > TOTAL_QUANTITY) {
-            log.info("[관찰] over-issue 발생 — race condition으로 한도({})를 초과해 발급되었다.", TOTAL_QUANTITY)
+        if (rowCount.toInt() == TOTAL_QUANTITY) {
+            log.info("[성공] 동시 요청은 {}이지만 쿠폰은 정확히 {}개만 발급되었다.", threadCount, TOTAL_QUANTITY)
         } else {
-            log.info("[관찰] 한도가 지켜짐 — race condition이 이번 실행에서 드러나지 않았다 (재현은 부하/스케줄링에 의존).")
+            log.info("[실패] 발급된 row 수가 한도({})와 다르다. 실제={}", TOTAL_QUANTITY, rowCount)
         }
     }
 
@@ -84,9 +83,9 @@ class CouponIssueServiceV1ConcurrencyTest @Autowired constructor(
         log.info("user_id={} 발급 row 수 = {}", sameUserId, rowCount)
 
         if (rowCount == 1L) {
-            log.info("[관찰] DB UNIQUE 제약이 중복을 막아냈다 — {}건 시도 중 1건만 발급됨.", threadCount)
+            log.info("[성공] 동일 유저가 {}번 요청했지만 1건만 발급되었다.", threadCount)
         } else {
-            log.info("[관찰] 중복 발급 발생: row 수 = {} (UNIQUE 제약 부재 또는 별도 결함).", rowCount)
+            log.info("[실패] 동일 유저에게 {}건 발급됨. 1인 1회 정책 위반.", rowCount)
         }
     }
 
@@ -104,12 +103,11 @@ class CouponIssueServiceV1ConcurrencyTest @Autowired constructor(
         log.info("성공: {}, 실패: {}", result.success, result.failure)
         log.info("coupon.issuedQuantity = {}", coupon.issuedQuantity)
         log.info("coupon_issue row 수   = {}", rowCount)
-        log.info("카운터 vs row 차이    = {}", rowCount - coupon.issuedQuantity)
 
-        if (rowCount.toInt() != coupon.issuedQuantity) {
-            log.info("[관찰] lost update 발생 — 카운터({})와 실제 row 수({})가 어긋났다.", coupon.issuedQuantity, rowCount)
+        if (rowCount.toInt() == coupon.issuedQuantity) {
+            log.info("[성공] 카운터와 실제 row 수가 일치한다. lost update 없음.")
         } else {
-            log.info("[관찰] 카운터와 row 수가 일치 — lost update가 이번 실행에서 드러나지 않았다.")
+            log.info("[실패] 카운터({})와 row 수({})가 어긋남. lost update 발생.", coupon.issuedQuantity, rowCount)
         }
     }
 

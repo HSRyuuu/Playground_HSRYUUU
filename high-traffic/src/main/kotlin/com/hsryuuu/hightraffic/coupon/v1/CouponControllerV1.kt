@@ -1,8 +1,8 @@
-package com.hsryuuu.hightraffic.coupon.controller
+package com.hsryuuu.hightraffic.coupon.v1
 
 import com.hsryuuu.hightraffic.coupon.dto.IssueCouponRequest
 import com.hsryuuu.hightraffic.coupon.dto.IssueCouponResponse
-import com.hsryuuu.hightraffic.coupon.service.CouponIssueServiceV1
+import com.hsryuuu.hightraffic.coupon.v1.CouponIssueServiceV1
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid

@@ -1,4 +1,4 @@
-package com.hsryuuu.hightraffic.coupon.service
+package com.hsryuuu.hightraffic.coupon
 
 import com.hsryuuu.hightraffic.common.exception.GlobalException
 import com.hsryuuu.hightraffic.coupon.dto.CouponStatusResponse

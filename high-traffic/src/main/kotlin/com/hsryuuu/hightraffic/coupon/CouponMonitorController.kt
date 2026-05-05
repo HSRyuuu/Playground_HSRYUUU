@@ -1,8 +1,8 @@
-package com.hsryuuu.hightraffic.coupon.controller
+package com.hsryuuu.hightraffic.coupon
 
 import com.hsryuuu.hightraffic.coupon.dto.CouponStatusResponse
 import com.hsryuuu.hightraffic.coupon.dto.IssueCountResponse
-import com.hsryuuu.hightraffic.coupon.service.CouponMonitorService
+import com.hsryuuu.hightraffic.coupon.CouponMonitorService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
