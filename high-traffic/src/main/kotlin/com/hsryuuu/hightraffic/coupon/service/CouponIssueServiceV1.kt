@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CouponIssueServiceV1(
     private val couponRepository: CouponRepository,
-    private val couponIssueRepository: CouponIssueRepository,
+    private val couponIssueRepository: CouponIssueRepository
 ) : CouponIssueService {
 
     @Transactional
@@ -28,9 +28,9 @@ class CouponIssueServiceV1(
             throw GlobalException(HttpStatus.CONFLICT, "SOLD OUT")
         }
 
-
-        couponIssueRepository.save(CouponIssue(couponId = couponId, userId = userId))
+        coupon.issuedQuantity = couponIssueRepository.countByCouponId(couponId).toInt()
         coupon.issue()
+        couponIssueRepository.save(CouponIssue(couponId = couponId, userId = userId))
     }
 
     override fun getCouponStatus(couponId: Long): CouponStatusResponse {
