@@ -12,7 +12,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    # show-sql 은 stdout 으로 무조건 찍어버리므로 사용하지 않는다.
+    # SQL 로그는 아래 logging.level 의 org.hibernate.SQL 레벨로 제어한다.
+    #  - INFO (기본)  : SQL 안 찍힘
+    #  - DEBUG       : SQL 찍힘
+    #  - org.hibernate.orm.jdbc.bind=TRACE : 바인딩 파라미터까지 찍힘
     properties:
       hibernate:
         format_sql: true
