@@ -1,4 +1,4 @@
-package com.hsryuuu.hightraffic.coupon.service
+package com.hsryuuu.hightraffic.coupon.v2
 
 import com.hsryuuu.hightraffic.common.exception.GlobalException
 import com.hsryuuu.hightraffic.coupon.entity.CouponIssue
@@ -9,17 +9,20 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * V1: 동시성 제어 없는 단순 JPA 구현 (1단계 baseline).
- * race condition으로 over-issue / lost update가 발생하는 것을 재현하는 용도.
+ * V2 발급의 트랜잭션 경계 담당 빈.
+ *
+ * [CouponIssueServiceV2]의 synchronized 블록 안에서만 호출되는 것을 전제로 한다.
+ * 본 빈에 직접 `@Transactional`을 붙여 두지 않으면 락 ↔ 트랜잭션 경계가 뒤바뀌어
+ * "락은 풀렸지만 커밋은 아직" 상태에서 다음 스레드가 stale read를 하는 문제가 생긴다.
  */
 @Service
-class CouponIssueServiceV1(
+class CouponIssueTxServiceV2(
     private val couponRepository: CouponRepository,
     private val couponIssueRepository: CouponIssueRepository,
-) : CouponIssueService {
+) {
 
     @Transactional
-    override fun issueCoupon(couponId: Long, userId: Long) {
+    fun issue(couponId: Long, userId: Long) {
         if (couponIssueRepository.existsByCouponIdAndUserId(couponId, userId)) {
             throw GlobalException(HttpStatus.CONFLICT, "이미 발급받은 유저입니다. ")
         }
