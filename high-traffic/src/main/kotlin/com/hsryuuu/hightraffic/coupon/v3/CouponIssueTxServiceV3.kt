@@ -40,7 +40,6 @@ class CouponIssueTxServiceV3(
         }
 
 
-        coupon.issuedQuantity = couponIssueRepository.countByCouponId(couponId).toInt()
         coupon.issue()
         couponIssueRepository.save(CouponIssue(couponId = couponId, userId = userId))
 

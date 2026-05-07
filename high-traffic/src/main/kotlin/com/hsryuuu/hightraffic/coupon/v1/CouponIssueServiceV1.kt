@@ -31,7 +31,6 @@ class CouponIssueServiceV1(
             throw GlobalException(HttpStatus.CONFLICT, "SOLD OUT")
         }
 
-        coupon.issuedQuantity = couponIssueRepository.countByCouponId(couponId).toInt()
         coupon.issue()
         couponIssueRepository.save(CouponIssue(couponId = couponId, userId = userId))
     }
